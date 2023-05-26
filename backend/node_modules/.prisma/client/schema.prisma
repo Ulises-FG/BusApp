@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url      = "postgres://Ulises-FG:WFBAgtCo1L2U@ep-billowing-sunset-519807-pooler.us-east-2.aws.neon.tech/neondb?pgbouncer=true&connect_timeout=10"
+  directUrl = "postgres://Ulises-FG:WFBAgtCo1L2U@ep-billowing-sunset-519807.us-east-2.aws.neon.tech/neondb?connect_timeout=10"
+  shadowDatabaseUrl = "postgres://Ulises-FG:WFBAgtCo1L2U@ep-billowing-sunset-519807.us-east-2.aws.neon.tech/proyecto"
+}
+
+model Usuario{
+    usuarioId String @id @default(uuid())
+    rol String
+    nombre String
+    contrasena String
+    correo String
+    ruta ruta[]
+    historial historial?
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+    deleted_at DateTime @default(now())
+}
+model ruta{
+    rutaId String @id @default(uuid())
+    nombre String
+    imagen String
+    idUsuario String
+    usuario Usuario @relation(fields: [idUsuario], references: [usuarioId])
+    created_at DateTime @default(now())
+    updated_at DateTime @updatedAt
+    deleted_at DateTime @default(now())
+}
+model historial{
+    historialId String @id @default(uuid())
+    rutaHistorial String
+    idUsuario String @unique
+    usuario Usuario @relation(fields: [idUsuario], references: [usuarioId])
+}
+
