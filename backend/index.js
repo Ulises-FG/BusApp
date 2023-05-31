@@ -9,11 +9,10 @@ const prisma = new PrismaClient();
 app.use(express.json());
 
 app.post('/usuario', async (req, res) => {
-  console.log('req.body', req.body);
   const body = req.body;
   const { rol, nombre, contrasena, correo } = body;
   try {
-    const usuario = await prisma.user.create({
+    const usuario = await prisma.Usuario.create({
       data: {
         rol: rol,
         nombre: nombre,
@@ -30,9 +29,9 @@ app.post('/usuario', async (req, res) => {
 app.get('/usuario/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await prisma.user.findUnique({
+    const user = await prisma.Usuario.findUnique({
       where: {
-        id: parseInt(id),
+        usuarioId: id,
       },
     });
     res.json(user);
@@ -42,12 +41,12 @@ app.get('/usuario/:id', async (req, res) => {
 });
 
 app.delete('/usuario/:id', async (req, res) => {
-  const idUsuario = parseInt(req.params.id);
+  const { id } = req.params;
 
   try {
-    const usuario = await prisma.user.delete({
+    const usuario = await prisma.Usuario.delete({
       where: {
-        id: idUsuario,
+        usuarioId: id,
       },
     });
 
@@ -58,19 +57,19 @@ app.delete('/usuario/:id', async (req, res) => {
 });
 
 app.put('/usuario/:id', async (req, res) => {
-  const idUsuario = parseInt(req.params.id);
+  const { id } = req.params;
   const { rol, nombre, contrasena, correo } = req.body;
 
   try {
-    const usuario = await prisma.user.update({
+    const usuario = await prisma.Usuario.update({
       where: {
-        id: idUsuario,
+        usuarioId: id,
       },
       data: {
-        rol,
-        nombre,
-        contrasena,
-        correo,
+        rol: rol,
+        nombre: nombre,
+        contrasena: contrasena,
+        correo: correo,
       },
     });
 
