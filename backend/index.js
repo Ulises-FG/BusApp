@@ -9,6 +9,7 @@ const prisma = new PrismaClient();
 app.use(express.json());
 
 app.post('/usuario', async (req, res) => {
+  console.log("hola");
   const body = req.body;
   const { rol, nombre, contrasena, correo } = body;
   try {
