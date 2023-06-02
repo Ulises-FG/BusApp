@@ -32,6 +32,9 @@ router.get('/:id', async (req, res) => {
       where: {
         rutaId: id,
       },
+      include: {
+        usuario: true,
+      },
     });
     res.json(ruta);
   } catch (error) {
@@ -46,6 +49,9 @@ router.delete('/:id', async (req, res) => {
     const ruta = await prisma.ruta.delete({
       where: {
         rutaId: id,
+      },
+      include: {
+        usuario: true,
       },
     });
     res.json(ruta);
@@ -63,6 +69,9 @@ router.put('/:id', async (req, res) => {
       where: {
         rutaId: id,
       },
+      include: {
+        usuario: true,
+      },
       data: {
         nombre: nombre,
         imagen: imagen,
@@ -76,5 +85,3 @@ router.put('/:id', async (req, res) => {
 });
 
 module.exports = router;
-
-
