@@ -10,17 +10,15 @@ router.use(express.json());
 // Crear un historial
 router.post('/', async (req, res) => {
   try {
-    const { rutaHistorial, idUsuario} = req.body;
-    console.log(rutaHistorial, idUsuario);
+    const { rutaHistorial, idUsuario } = req.body;
     const historial = await prisma.historial.create({
       data: {
-        rutaHistorial: rol,
-        idUsuario: 1,
+        rutaHistorial: rutaHistorial,
+        idUsuario: idUsuario,
       },
     });
     res.json(historial);
   } catch (error) {
-    console.log('holaaaaaaaa');
     res.status(500).json({ error: 'Error al crear un historial' });
   }
 });
@@ -31,7 +29,10 @@ router.get('/:id', async (req, res) => {
     const { id } = req.params;
     const hits = await prisma.historial.findUnique({
       where: {
-        historialId:id,
+        historialId: id,
+      },
+      include: {
+        usuario: true,
       },
     });
     res.json(hits);
@@ -46,7 +47,10 @@ router.delete('/:id', async (req, res) => {
     const { id } = req.params;
     const historial = await prisma.historial.delete({
       where: {
-        historialId: parseInt(id),
+        historialId: id,
+      },
+      include: {
+        usuario: true,
       },
     });
     res.json(historial);
@@ -59,14 +63,17 @@ router.delete('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { rutaHistorial, idUsuario} = req.body;
+    const { rutaHistorial, idUsuario } = req.body;
     const historial = await prisma.usuario.update({
       where: {
-        historialId: parseInt(id),
+        historialId: id,
       },
       data: {
-        rutaHistorial: rol,
-        idUsuario: 1,
+        rutaHistorial: rutaHistorial,
+        idUsuario: idUsuario,
+      },
+      include: {
+        usuario: true,
       },
     });
     res.json(historial);
