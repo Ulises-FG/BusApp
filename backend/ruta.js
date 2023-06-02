@@ -1,16 +1,16 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 
-const app = express();
+const router = express.Router();
 const prisma = new PrismaClient();
 
-app.use(express.json());
+// Middleware para analizar el cuerpo de las solicitudes como JSON
+router.use(express.json());
 
-app.post('/ruta', async (req, res) => {
-  console.log('req.body', req.body);
-  const body = req.body;
-  const { nombre, imagen, idUsuario } = body;
+// Crear una ruta
+router.post('/', async (req, res) => {
   try {
+    const { nombre, imagen, idUsuario } = req.body;
     const ruta = await prisma.ruta.create({
       data: {
         nombre: nombre,
@@ -20,16 +20,17 @@ app.post('/ruta', async (req, res) => {
     });
     res.json(ruta);
   } catch (error) {
-    res.status(500).json({ error: 'Error al obtener la ruta' });
+    res.status(500).json({ error: 'Error al crear la ruta' });
   }
 });
 
-app.get('/ruta/:id', async (req, res) => {
+// Obtener una ruta por ID
+router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const ruta = await prisma.ruta.findUnique({
       where: {
-        id: id,
+        rutaId: id,
       },
     });
     res.json(ruta);
@@ -38,41 +39,42 @@ app.get('/ruta/:id', async (req, res) => {
   }
 });
 
-app.delete('/ruta/:id', async (req, res) => {
-  const idRuta = req.params.id;
-
+// Eliminar una ruta por ID
+router.delete('/:id', async (req, res) => {
   try {
+    const { id } = req.params;
     const ruta = await prisma.ruta.delete({
       where: {
-        id: idRuta,
+        rutaId: id,
       },
     });
-
     res.json(ruta);
   } catch (error) {
     res.status(500).json({ error: 'Error al eliminar la ruta' });
   }
 });
 
-app.put('/ruta/:id', async (req, res) => {
-  const idRuta = parseInt(req.params.id);
-  const { nombre, imagen, idUsuario } = req.body;
-
+// Actualizar una ruta por ID
+router.put('/:id', async (req, res) => {
   try {
+    const { id } = req.params;
+    const { nombre, imagen, idUsuario } = req.body;
     const ruta = await prisma.ruta.update({
       where: {
-        id: idRuta,
+        rutaId: id,
       },
       data: {
-        nombre,
-        imagen,
-        idUsuario,
+        nombre: nombre,
+        imagen: imagen,
+        idUsuario: idUsuario,
       },
     });
-
     res.json(ruta);
   } catch (error) {
     res.status(500).json({ error: 'Error al actualizar la ruta' });
   }
 });
+
+module.exports = router;
+
 
